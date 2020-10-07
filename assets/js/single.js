@@ -3,6 +3,43 @@ var limitWarningEl = document.querySelector("#limit-warning");
 //9. create a reference to the issues container
 var issueContainerEl = document.querySelector("#issues-container");
 //1. creating a getRepoIssues() function that will take in a repo name as a parameter
+
+//1.1 create function
+//1.5. update:
+var getRepoName = function () {
+    // grab repo name from url query string
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+
+    if (repoName) {
+        // display repo name on the page
+        repoNameEl.textContent = repoName;
+
+        getRepoIssues(repoName);
+    } else {
+        // if no repo was given, redirect to the homepage
+        document.location.replace("./index.html");
+    }
+};
+// var queryString = document.location.search;
+// var repoName = queryString.split("=")[1];
+// // getRepoIssues(repoName);
+// // repoNameEl.textContent = repoName;
+// //move the getRepoIssues() and the repoName.textContent expressions into a conditional statement that checks if the repoName exists
+// if (repoName) {
+//     repoNameEl.textContent = repoName;
+//     getRepoIssues(repoName);
+// } else {
+//     document.location.replace("./index.html");
+// }
+
+// var getRepoName = function (repoName) {//then 1.2. Let's also remove the hardcoded function call for getRepoIssues()
+//     var queryString = document.location.search;//1.3 add to the getRepoName() function by using the location object and split() method to extract the repo name from the query string
+//     //1.4. By splitting on the =, you'll end up with an array with two elements, indexes start at zero, so we'll need to use [1] to get the second element
+//     var repoName = queryString.split("=")[1];
+//     console.log(repoName);
+
+//var repoNameEl = document.querySelector("#repo-name");
 var getRepoIssues = function (repo) {
     console.log(repo);
     // 2. Fetch API to create an HTTP request.create a variable to hold the query
@@ -26,9 +63,9 @@ var getRepoIssues = function (repo) {
                 }
 
             });
-        }
-        else {
-            alert("There was a problem with your request!");
+        } else {
+            //alert("There was a problem with your request!");
+            document.location.replace("./index.html");
         }
     });
 };
@@ -87,5 +124,7 @@ var displayWarning = function (repo) {
     limitWarningEl.appendChild(linkEl);
 };
 
-getRepoIssues("facebook/react");
+//getRepoIssues("facebook/react"); 1.1.remove hardcoded f call
+getRepoName();//1.1. place the function call at the bottom of the file 
+
 
