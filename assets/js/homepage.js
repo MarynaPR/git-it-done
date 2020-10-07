@@ -1,3 +1,4 @@
+var languageButtonsEl = document.querySelector("#language-buttons");
 // var getUserRepos = function () {
 //     console.log("function was called");
 // };
@@ -35,6 +36,17 @@ var formSubmitHandler = function (event) {
     }
 };
 
+var buttonClickHandler = function (event) {
+    var language = event.target.getAttribute("data-language");
+    console.log(language);
+    if (language) {
+        getFeaturedRepos(language);
+
+        // clear old content
+        repoContainerEl.textContent = "";
+    }
+
+};
 var getUserRepos = function (user) {
     // format the github api url
     var apiUrl = "https://api.github.com/users/" + user + "/repos";
@@ -62,6 +74,33 @@ var getUserRepos = function (user) {
             alert("Unable to connect to GitHub");
         });
 };
+//1.1.new function called getFeaturedRepos() that accepts a language parameter, creates an API endpoint, and makes an HTTP request to that endpoint using fetch()
+var getFeaturedRepos = function (language) {
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+
+    //fetch(apiUrl);
+    // fetch(apiUrl).then(function(response) {
+    //     if (response.ok) {
+    //       console.log(response);
+    //     } else {
+    //       alert("Error: " + response.statusText);
+    //     }
+    //   });
+    // };
+    fetch(apiUrl).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                //in the json() method's callback function, pass data.items and the language parameter's value into displayRepos()
+                //console.log(data)
+                displayRepos(data.items, language);
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    });
+};
+
+
 //6. 
 var displayRepos = function (repos, searchTerm) {
     //15. check if api returned any repos=>check for an empty array and let the user know if there's nothing to display
@@ -113,6 +152,7 @@ var displayRepos = function (repos, searchTerm) {
     }
 };
 
+
 // 1.
 fetch("https://api.github.com/users/octocat/repos").then(function (response) {
     response.json().then(function (data) {
@@ -122,3 +162,4 @@ fetch("https://api.github.com/users/octocat/repos").then(function (response) {
 
 //4. 
 userFormEl.addEventListener("submit", formSubmitHandler);
+languageButtonsEl.addEventListener("click", buttonClickHandler);
