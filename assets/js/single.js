@@ -1,3 +1,5 @@
+// 13. after adding div to html with id="limit-warning"
+var limitWarningEl = document.querySelector("#limit-warning");
 //9. create a reference to the issues container
 var issueContainerEl = document.querySelector("#issues-container");
 //1. creating a getRepoIssues() function that will take in a repo name as a parameter
@@ -14,6 +16,15 @@ var getRepoIssues = function (repo) {
                 //console.log(data);
                 // 6. instead of console.log pass response data to dom function
                 displayIssues(data);
+                //12.make sure we let users know if there are more issues that can't be viewed. If that's the case, we'll direct users to GitHub, where they can see the full list.
+                // check if api has paginated issues
+
+                if (response.headers.get("Link")) {
+                    //console.log("repo has more than 30 issues");
+                    //17. =>replace with:
+                    displayWarning(repo);
+                }
+
             });
         }
         else {
@@ -62,6 +73,18 @@ var displayIssues = function (issues) {//call this function after a successful H
         issueContainerEl.appendChild(issueEl);
     }
 
+};
+//14. function
+var displayWarning = function (repo) {
+    // add text to warning container
+    limitWarningEl.textContent = "To see more than 30 issues, visit ";
+    // 15.Then in displayWarning(), append a link element with an href attribute that points to https://github.com/<repo>/issues
+    var linkEl = document.createElement("a");
+    linkEl.textContent = "See More Issues on GitHub.com";
+    linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+    // append to warning container
+    limitWarningEl.appendChild(linkEl);
 };
 
 getRepoIssues("facebook/react");
